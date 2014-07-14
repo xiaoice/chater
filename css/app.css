@@ -1,0 +1,14 @@
+.padding10{padding: 10px;}
+
+.chater_wrap{font-size: 12px;}
+.chater_content_list{height: 400px;overflow: auto;}
+.chater_buttons{text-align: right;padding-top: 10px;}
+.chater_wrap .chater_textarea{resize:none;}
+.chater_content_item{}
+.chater_content_label{color: #0030FF;}
+.chater_content_name{color: inherit;}
+.chater_content_time{padding-left: 1px;}
+.chater_content_text{padding: 5px 10px;}
+.chater_content_owner{color: green;}
+
+.ico_system{cursor: pointer;}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>socket.io聊天室</title>
+
+		<link rel="stylesheet" type="text/css" href="js/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="css/app.css">
+		<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	</head>
+
+	<body>
+		<div class="container chater_wrap">
+			<div class="panel panel-primary">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">
+			    socket.io聊天室
+			    <span class="pull-right glyphicon glyphicon-cog ico_system" title="系统设置"></span>
+			    </h3>
+			  </div>
+			  <div id="chater_content_list" class="panel-body chater_content_list">
+
+			  </div>
+			  <div class="panel-footer padding10">
+			    <textarea id="text_content" class="form-control chater_textarea"></textarea>
+			    <div class="chater_buttons">
+				    <button type="button" class="btn btn-default btn-xs">关闭(C)</button>
+				    <button id="bt_send" type="button" class="btn btn-primary btn-xs">发送(S)</button>
+			    </div>
+			  </div>
+			</div>
+		</div>
+
+
+		<div class="hidden">
+			<div id="tpl_item">
+				<div class="chater_content_item">
+			    	<span class="chater_content_label">
+			    		<a class="chater_content_name">张三</a>
+			    		<span class="chater_content_time">2014-07-14 21:34:53</span>
+			    	</span>
+			    	<p class="chater_content_text">请问在线吗？</p>
+			    </div>
+			</div>	
+		</div>
+	</body>
+</html>
+
+<script>
+
+var default_name=undefined;
+function initName(){
+	default_name=prompt("请输入用户名",getRName());
+	if(!default_name){
+		initName();
+	}
+}
+
+initName();
+
+//获取随机名称
+function getRName(){
+	var familys=['张','李','王','赵','蔡','朱','毛','黄','陈','刘'];
+	var names=['琴','娟','云','飞','德','毅','东','腾','军','欣'];
+	return familys[Math.floor(Math.random()*10)]+names[Math.floor(Math.random()*10)];
+}
+
+//生成内容文本
+function createText(data){
+	var $item=$("#tpl_item").children().clone();
+  	$item.find(".chater_content_name").html(data.name);
+  	$item.find(".chater_content_time").html(data.time);
+  	$item.find(".chater_content_text").html(data.text);
+  	$item.appendTo("#chater_content_list");
+  	return $item;
+}
+
+
+  var socket = io('http://localhost');
+  socket.on('connectionok', function (data) {
+  	console.log(data);
+  });
+
+  socket.on('msgList', function (data) {
+  	createText(data);
+  });
+
+  $("#bt_send").click(function(){
+  	var data={
+  		name:"你"
+  		,text:$("#text_content").val()
+  		,time:new Date()
+  	}
+  	createText(data).find(".chater_content_label").addClass("chater_content_owner");
+  	data.name=default_name;
+    socket.emit('send', data);
+  	$("#text_content").val('').focus();
+  });
+</script>
