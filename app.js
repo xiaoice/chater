@@ -16,6 +16,7 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
   socket.emit('connectionok', "socket 连接成功");
   socket.on('send', function (data) {
+  	console.log(data);
   	socket.broadcast.emit('msgList', data);
   });
 });

@@ -14,7 +14,7 @@
 	</head>
 
 	<body>
-		<div class="container chater_wrap">
+		<div class="container-fluid chater_wrap">
 			<div class="panel panel-primary">
 			  <div class="panel-heading">
 			    <h3 class="panel-title">
@@ -55,7 +55,7 @@
 var default_name=undefined;
 function initName(){
 	default_name=prompt("请输入用户名",getRName());
-	if(!default_name){
+	if(typeof default_name==="undefined"){
 		initName();
 	}
 }
@@ -93,11 +93,19 @@ function createText(data){
   	var data={
   		name:"你"
   		,text:$("#text_content").val()
-  		,time:new Date()
+  		,time:new Date().toString()
   	}
   	createText(data).find(".chater_content_label").addClass("chater_content_owner");
   	data.name=default_name;
     socket.emit('send', data);
-  	$("#text_content").val('').focus();
+  	$("#text_content").val('');
+
+
+	var data={
+  		name:"你"
+  		,text:$("#text_content").val()
+  		,time:new Date().toString()
+  	}
+  	socket.emit('send', "data");
   });
 </script>
