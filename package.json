@@ -1,0 +1,27 @@
+{
+  "name": "chater",
+  "version": "0.0.0",
+  "description": "chater\r ======",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^3.0.1",
+    "socket.io": "^1.0.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiaoice/chater.git"
+  },
+  "keywords": [
+    "chater"
+  ],
+  "author": "xiaoice",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xiaoice/chater/issues"
+  },
+  "homepage": "https://github.com/xiaoice/chater"
+}
