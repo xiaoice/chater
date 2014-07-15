@@ -15,8 +15,25 @@ app.get('/', function (req, res) {
 
 io.on('connection', function (socket) {
   socket.emit('connectionok', "socket 连接成功");
+  var cache_name=undefined;
+
   socket.on('send', function (data) {
-  	console.log(data);
+  	if(data.type==="login"){
+		cache_name=data.name;
+  	}
   	socket.broadcast.emit('msgList', data);
   });
+
+  socket.on('disconnect', function (data) {
+  		var data={
+	  		type:"loginout"
+	  		,name:cache_name
+	  		,text:"离开了聊天室"
+	  		,time:new Date().toLocaleString()
+  		}
+  		cache_name=undefined;
+  		socket.broadcast.emit('msgList', data);
+  });
+
+
 });
