@@ -1,6 +1,6 @@
 .padding10{padding: 10px;}
 
-.chater_wrap{font-size: 12px;padding: 0; width: 680px; position: relative;background-color: #fff;}
+.chater_wrap{font-size: 12px;padding: 0; width: 100%; min-width: 320px; position: relative;background-color: #fff;}
 .chater_panel{margin: 0;}
 .chater_wrap_wait{position: absolute;left: 0;top: 0;width: 100%;height: 100%;background-color: #fff;}
 .chater_wrap_waiting{width: 400px; font-size: 30px; height: 40px; margin: auto;position: absolute;  top: 0; left: 0; bottom: 0; right: 0; }
