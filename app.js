@@ -9,7 +9,7 @@ console.log("server was started!");
 
 app.use(express.static(path.join(__dirname)));
 
-app.get('/', function (req, res) {
+app.get('/app.html', function (req, res) {
   res.sendfile(__dirname + '/app.html');
 });
 
@@ -20,6 +20,7 @@ io.on('connection', function (socket) {
   socket.on('send', function (data) {
   	if(data.type==="login"){
 		cache_name=data.name;
+		console.log(data.name+data.text);
   	}
   	socket.broadcast.emit('msgList', data);
   });
@@ -33,6 +34,7 @@ io.on('connection', function (socket) {
   		}
   		cache_name=undefined;
   		socket.broadcast.emit('msgList', data);
+  		console.log(data.name+data.text);
   });
 
 

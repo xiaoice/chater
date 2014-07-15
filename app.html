@@ -125,7 +125,7 @@
 	}
 
 
-	var socket = io('http://localhost');
+	var socket = io(null);
 	//若连接上了服务器，启动程序
 	socket.on('connectionok', function (data) {
 		$(".chater_wrap_wait").hide();
