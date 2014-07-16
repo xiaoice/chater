@@ -2,7 +2,7 @@
   "name": "chater",
   "version": "0.0.1",
   "description": "chater\r ======",
-  "main": "node.js",
+  "main": "app.js",
   "dependencies": {
     "express": "",
     "socket.io": ""
