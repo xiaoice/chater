@@ -1,8 +1,8 @@
 var express=require('express');
 var path=require('path');
 var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
 
 server.listen(3000);
 console.log("server was started!");
