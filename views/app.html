@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta property="qc:admins" content="17376517276230236375" />
+		<title>socket.io聊天室></title>
+
+		<link rel="stylesheet" type="text/css" href="/plugins/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="/css/app.css">
+		<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="/plugins/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	</head>
+
+	<body>
+		<div class="chater_wrap">
+			<div class="chater_wrap_wait">
+				<div class="chater_wrap_waiting">
+					<em class="glyphicon glyphicon-refresh ico_wait"></em>
+					<span class="chater_wrap_waiting_text">正在连接服务器，请稍后...</span>
+				</div>
+			</div>
+			<div class="panel panel-primary chater_panel">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">
+			    	socket.io聊天室
+			    	<span id="username"></span>
+			    	<span id="bt_setting" class="pull-right glyphicon glyphicon-cog ico_system" title="系统设置"></span>
+			    </h3>
+			  </div>
+			  <div id="chater_content_list" class="panel-body chater_content_list">
+
+			  </div>
+			  <div class="panel-footer padding10">
+			    <textarea id="text_content" class="form-control chater_textarea" placeholder="按下ctrl+enter发送消息"></textarea>
+			    <div class="chater_buttons">
+				    <button type="button" class="btn btn-default btn-xs">关闭(C)</button>
+				    <button id="bt_send" type="button" class="btn btn-primary btn-xs">发送(S)</button>
+			    </div>
+			  </div>
+			</div>
+		</div>
+
+
+		<div class="hidden">
+			<div id="tpl_item">
+				<div class="chater_content_item">
+			    	<span class="chater_content_label">
+			    		<a class="chater_content_name">张三</a>
+			    		<span class="chater_content_time">2014-07-14 21:34:53</span>
+			    	</span>
+			    	<p class="chater_content_text">请问在线吗？</p>
+			    </div>
+			</div>
+			<div id="tpl_login">
+				<div class="chater_content_item">
+			    	<span class="chater_content_label chater_content_label_login">
+			    		<em class="glyphicon glyphicon-volume-up"></em>
+			    		<a class="chater_content_name">系统提示：</a>
+			    		<span class="chater_content_label_login_text">张三进入了聊天室</span>
+			    	</span>
+			    </div>
+			</div>
+			<div id="tpl_loginout">
+				<div class="chater_content_item">
+			    	<span class="chater_content_label chater_content_label_loginout">
+			    		<em class="glyphicon glyphicon-volume-up"></em>
+			    		<a class="chater_content_name">系统提示：</a>
+			    		<span class="chater_content_label_loginout_text">张三离开了聊天室</span>
+			    	</span>
+			    </div>
+			</div>
+		</div>
+	</body>
+</html>
+
+<script type="text/javascript">
+	var $document=$(document);
+	var default_name=undefined;
+
+	//要求用户输入用户名
+	function initName(callback){
+		default_name=prompt("请输入用户名",getRName());
+		if(default_name===null||typeof default_name==="undefined"){
+			initName(callback);
+		}else{
+			$("#username").html("--"+default_name);
+			callback&&callback(default_name);
+		}
+	}
+
+	//获取随机名称
+	function getRName(){
+		var familys=['张','李','王','赵','蔡','朱','毛','黄','陈','刘'];
+		var names=['琴','娟','云','飞','德','毅','东','腾','军','欣'];
+		return familys[Math.floor(Math.random()*10)]+names[Math.floor(Math.random()*10)];
+	}
+
+	//生成内容文本
+	function createText(data){
+		var $item=$("#tpl_item").children().clone();
+	  	$item.find(".chater_content_name").html(data.name);
+	  	$item.find(".chater_content_time").html(data.time);
+	  	$item.find(".chater_content_text").html(data.text);
+	  	$item.appendTo("#chater_content_list");
+	  	return $item;
+	}
+
+	//生成登录提醒内容文本
+	function createLoginText(data){
+		var $item=$("#tpl_login").children().clone();
+	  	$item.find(".chater_content_label_login_text").html(data.name+data.text);
+	  	$item.appendTo("#chater_content_list");
+	  	return $item;
+	}
+
+	//生成登录提醒内容文本
+	function createLoginoutText(data){
+		var $item=$("#tpl_loginout").children().clone();
+	  	$item.find(".chater_content_label_loginout_text").html(data.name+data.text);
+	  	$item.appendTo("#chater_content_list");
+	  	return $item;
+	}
+
+
+	var socket = io(null);
+	//若连接上了服务器，启动程序
+	socket.on('disconnect', function (data) {
+		console.log("连接中断");
+		//alert(1);
+	});
+	socket.on('connect', function (data) {
+		//alert(2);
+		console.log("连接成功");
+	});
+
+	socket.on('connectionok', function (data) {
+		$(".chater_wrap_wait").hide();
+		initName(function(name){
+			var data={
+				type:"login"
+				,name:name
+				,text:"进入了聊天室"
+				,time:new Date().toLocaleString()
+			}
+			socket.emit("send",data);
+		});
+	});
+
+	//监听消息
+	socket.on('msgList', function (data) {
+		//若是新用户登录，广播
+		if(data.type==="login"){
+			createLoginText(data);
+		}
+		//若有用户退出，广播
+		else if(data.type==="loginout"){
+			createLoginoutText(data);
+		}
+		else{
+			createText(data);
+		}
+	});
+
+	//点击发送按钮
+	$document.on("click","#bt_send",function(){
+		var $content=$("#text_content"),text=$content.val(),data;
+		if(text===""){
+			return;
+		}
+
+		data={
+			type:"msgList"
+			,name:"你"
+			,text:text
+			,time:new Date().toLocaleString()
+		}
+		createText(data).find(".chater_content_label").addClass("chater_content_owner");
+		data.name=default_name;
+		socket.emit('send', data);
+		$content.val('');
+	});
+
+	//文本输入框按下ctrl+enter发送消息
+	$document.on("keydown","#text_content",function(e){
+		if(e.ctrlKey&&e.keyCode===13){
+			$("#bt_send").trigger("click");
+		}
+	});
+
+	//点击设置按钮
+	$document.on("click","#bt_setting",function(e){
+		default_name=prompt("请输入用户名",default_name);
+		if(default_name===null||typeof default_name==="undefined"){
+			initName();
+		}else{
+			$("#username").html("--"+default_name);
+		}
+	});
+
+</script>

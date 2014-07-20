@@ -1,0 +1,1 @@
+D:\Java\MongoDB\bin\mongod.exe -dbpath D:\Java\MongoDB\chater

@@ -1,0 +1,170 @@
+*{box-sizing: border-box;-webkit-box-sizing:border-box;}
+*:before, *:after {box-sizing: border-box;}
+
+html{font-family: HelveticaNeue,Helvetica,STHeiTi,sans-serif;overflow: hidden;}
+body{background-color: #f6f6f6;margin: 0;padding: 0;overflow: hidden;}
+button, html input[type="button"], input[type="reset"], input[type="submit"] {cursor: pointer;}
+input, button, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    ime-mode:disabled
+}
+
+.btn{
+	background: -moz-linear-gradient(center top,#21cb13,#29B42C);
+  	background: -webkit-gradient(linear,left top, left bottom,from(#21cb13),to(#29B42C));
+    background: -webkit-linear-gradient(center top,#21cb13,#29B42C);
+    background: -o-linear-gradient(center top,#21cb13,#29B42C);
+    border: 1px solid #3bbe00;border-radius: 4px;text-align: center;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.13), 0 1px 1px #33F44B inset;
+	font-weight: bold;color: #fff;text-decoration: none;outline: 0 none;
+}
+
+.padding10{padding: 10px;}
+.mt10{margin-top: 10px;}
+.hidden{display: none;}
+.pull-right{float: right;}
+.pull-left{float: left;}
+
+.chater_wrap{font-size: 12px;padding: 0; width: 100%; position: relative;background-color: #fff;}
+.chater_panel{margin: 0;}
+.chater_wrap_wait{position: absolute;left: 0;top: 0;width: 100%;height: 100%;background-color: #fff;}
+.chater_wrap_waiting{width: 400px; font-size: 30px; height: 40px; margin: auto;position: absolute;  top: 0; left: 0; bottom: 0; right: 0; }
+.chater_wrap_waiting_text{padding-left: 2px;color: #00AE04;}
+.chater_content_list{height: 400px;overflow: auto;}
+.chater_buttons{text-align: right;padding-top: 10px;}
+.chater_wrap .chater_textarea{resize:none;}
+.chater_content_item{}
+.chater_content_label{color: #0030FF;}
+.chater_content_name{color: inherit;}
+.chater_content_time{padding-left: 1px;}
+.chater_content_text{padding: 5px 10px;margin: 0;white-space: pre;}
+.chater_content_owner{color: green;}
+.chater_content_label_login{color: #1b9a00;display: block;padding-bottom: 10px;}
+.chater_content_label_loginout{color: #A40000;display: block;padding-bottom: 10px;}
+.chater_content_label_login .chater_content_name,.chater_content_label_loginout .chater_content_name{color: #0030FF;}
+
+
+/*登录、注册面板*/
+.login_wrap{width: 100%;padding:20px 10px;overflow: hidden;}
+.login_wrap .login_panel{}
+.login_wrap .login_logo{background: url("/img/logo.png") no-repeat 0 0 /100% 100%;display: inline-block;height: 34px;margin-bottom: -10px;width: 31px;}
+.login_wrap .login_logo_text{ color: rgb(31, 31, 31);display: inline-block;font-size: 20px;margin-left: 10px;font-weight: 100;}
+.login_wrap .login_input_div{display: block;margin-top: 30px;}
+.login_wrap .login_input{border: 1px solid #ccc;color: #868686;font-size: 16px;outline: 0 none;box-sizing: border-box;height: 45px;padding: 5px;width: 100%;}
+.login_wrap .login_username{border-radius: 4px 4px 0 0; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset;}
+.login_wrap .login_password{border-radius: 0 0 4px 4px;margin-top: -1px;}
+.login_wrap .login_button{
+	background: -moz-linear-gradient(center top,#21cb13,#29B42C);
+  	background: -webkit-gradient(linear,left top, left bottom,from(#21cb13),to(#29B42C));
+    background: -webkit-linear-gradient(center top,#21cb13,#29B42C);
+    background: -o-linear-gradient(center top,#21cb13,#29B42C);
+
+	border: 1px solid #40a217;border-radius: 4px;text-align: center;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.13), 0 1px 1px #9ed74a inset;
+	font-weight: bold;font-size: 16px;text-decoration: none;outline: 0 none;
+	height: 46px;line-height:46px;color: #fff;width: 100%;
+}
+.login_wrap .login_in{margin-top: 20px;}
+.login_wrap .login_a_text{padding: 10px 10px 0 0;display: inline-block;color: #000eff;font-size: 12px;}
+.login_wrap .login_tip{color: red;padding-bottom: 12px;font-size: 12px;display: none;}
+.login_wrap .login_back{
+	margin-top: 10px;color: #75c92a;box-shadow: none;border: 1px solid #8ECC72;
+	background: -moz-linear-gradient(center top,#fff, #E5FFCD);
+  	background: -webkit-gradient(linear,left top, left bottom,from(#fff),to(#E5FFCD));
+    background: -webkit-linear-gradient(center top,#fff, #E5FFCD);
+    background: -o-linear-gradient(center top,#fff, #E5FFCD);
+    display: block;
+}
+.login_wrap .reg_username{border-radius: 4px;}
+.login_wrap .reg_password{border-radius: 4px 4px 0 0;margin-top: 7px;}
+.login_wrap .reg_passwords{border-radius: 0 0 4px 4px;margin-top: -1px;}
+
+/*聊天面板*/
+.chaters_wrap{width: 100%;padding:0;background-color: #000;}
+.chaters_wrap .chaters_panel{overflow: hidden;}
+.chaters_wrap .chaters_title_panel{
+	background-color: rgba(91, 91, 91, 0.63);
+	border-radius: 4px 4px 0 0;
+	border-top: 1px solid #565656;
+	padding: 10px 10px;color: #fff;
+}
+.chaters_wrap .chaters_title{}
+.chaters_wrap .chaters_context_panel{overflow: auto;position: relative;background-color:#f6f6f6;padding: 10px;}
+.chaters_wrap .chaters_item{width: 80%;position: relative;}
+.chaters_wrap .chaters_item_left{padding: 4px 0 10px;float: left;}
+.chaters_wrap .chaters_item_right{padding: 4px 0 10px;float: right;}
+.chaters_wrap .chaters_user_img{
+	width: 38px;height: 38px;border-width: 0; border-radius: 3px;
+	position: absolute;top: 4px;
+}
+.chaters_wrap .chaters_item_left .chaters_user_img{left: 0;}
+.chaters_wrap .chaters_item_right .chaters_user_img{right: 0;}
+
+.chaters_wrap .chaters_context_box{
+	max-width: 100%;background-color: red;position: relative;display: inline-block;
+	font-size: 12px;padding: 11.5px;border-radius: 5px;
+	background-color:#57E35A;
+	/* background: -moz-linear-gradient(center top,#21cb13,#29B42C);
+	  	background: -webkit-gradient(linear,left top, left bottom,from(#21cb13),to(#29B42C));
+	    background: -webkit-linear-gradient(center top,#21cb13,#29B42C);
+	    background: -o-linear-gradient(center top,#21cb13,#29B42C); */
+}
+.chaters_wrap .chaters_item_left .chaters_context_box{margin-left:50px;float: left;}
+.chaters_wrap .chaters_item_right .chaters_context_box{margin-right:50px;float: right;}
+
+.chaters_wrap .chaters_context{white-space: pre-wrap;}
+.chaters_wrap .chaters_arrow{position: absolute;top: 10px;color: #57E35A;font-size: 17px;}
+.chaters_wrap .chaters_item_left .chaters_arrow{left: -5px;}
+.chaters_wrap .chaters_item_right .chaters_arrow{right: -5px;}
+.chaters_wrap .chaters_input_panel{
+	position: fixed;bottom: 0;left: 0;width: 100%;padding:10px 75px 10px 10px;
+}
+
+.chaters_wrap .chaters_input{
+	border: 1px solid #ccc;border-radius: 3px;width: 100%;
+	padding: 2px 7px;height: 32px;
+}
+.chaters_wrap .chaters_button_send{
+	width: 60px;font-size: 14px;padding: 0 10px;height: 32px;line-height: 32px;
+	position: absolute;bottom: 10px;right: 10px;
+}
+.chaters_wrap .chaters_disconnect{
+	padding: 10px;font-size: 12px;color: #fff;
+	position: fixed;top: 41px;left: 0;width: 100%;z-index: 1000;text-align: center;
+ 	background-color: rgba(179, 15, 15, 0.66);
+    border: 1px dashed #600000;
+}
+
+/*好友列表面板*/
+.list_wrap{width: 100%;padding:10px;overflow: hidden;}
+.list_wrap .login_panel{}
+.list_wrap{width: 100%;padding:0;background-color: #000;}
+.list_wrap .list_title_panel{
+	background-color: rgba(91, 91, 91, 0.63);
+	border-radius: 4px 4px 0 0;
+	border-top: 1px solid #565656;
+	padding: 10px 10px;color: #fff;
+}
+.list_wrap .list_title{}
+.list_wrap .list_context_panel{background-color: #f6f6f6;overflow: auto;}
+.list_wrap .list_item{padding: 5px 10px;position: relative;overflow: hidden;border-bottom: 1px solid #ccc;}
+.list_wrap .list_item:hover{background-color: #E7E7E7;cursor: pointer;}
+.list_wrap .list_user_img{
+	width: 38px;height: 38px;border-width: 0; border-radius: 3px;
+	position: absolute;top: 5px;
+}
+.list_wrap .list_content{margin-left: 50px;font-size: 12px;height: 38px;}
+.list_wrap .list_content_username{padding: 2px 0;}
+.list_wrap .list_content_text{padding: 2px 0;color: #999;}
+
+.qqLogin{text-align: center;}
+.qqLogin a{display: block;margin-top: 10px;}
+.qqLogin img{width: 115px;height: 24px;}
+.ico_system{cursor: pointer;}
+.ico_wait{animation: 2s linear 0s normal none infinite rotate;color: #00AE04;}
+@keyframes rotate {
+	0% {transform: rotate(0deg);}
+	100% {transform: rotate(359deg);}
+}
