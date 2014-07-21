@@ -8,9 +8,10 @@ var router = require('./routers/index');
 var favicon = require('static-favicon');
 var errorhandler = require('errorhandler');
 var session = require('express-session');
-var cookie = require('cookie-parser');
+var cookie = require('cookie');
 var MongoStore = require('connect-mongo')(session);
 var setting = require('./setting');
+
 
 /*app.use(session({
     secret: setting.cookieSecret,
@@ -23,6 +24,7 @@ var setting = require('./setting');
   secret: 'my secret',
   store: new MongoStore({'db': 'chater'})
 }));*/
+
 
 app.use(session({
     secret:setting.cookieSecret,
@@ -49,10 +51,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 
-//验证并设置session
-/*io.set('authorization', function(handshakeData, callback){
+/*//验证并设置session
+io.set('authorization', function(handshakeData, callback){
     // 通过客户端的cookie字符串来获取其session数据
-    handshakeData.cookie = cookie.cookieParser(handshakeData.headers.cookie)
+    //handshakeData.cookie = cookie.cookieParser(handshakeData.headers.cookie)
+    handshakeData.cookie = cookie.parse(handshakeData.headers.cookie)
     var sessionid = handshakeData.cookie['connect.sid'];//这是默认的，可以在app.use(express.session({key:'userid'})的这个key来修改默认
     if (sessionid) {
         //由于cookie保存如下，mongodb保存的_id为sessionID的加密格式，为ypbxGhOzzAQDlsn3mmVGrO6A，获取想要的串就ok
@@ -82,12 +85,8 @@ if (process.env.NODE_ENV === 'development') {
 
 io.on('connection', function (socket) {
   socket.emit('connectionok', "socket 连接成功");
-
+  //console.log('-session',socket.handshake);
   socket.on('login', function (data) {
-    if(data.type==="login"){
-    app.set("username",data.name);
-    console.log(data.name+data.text);
-    }
     socket.broadcast.emit('msgList', data);
   });
 

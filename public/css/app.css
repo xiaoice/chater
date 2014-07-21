@@ -159,9 +159,25 @@ input, button, select, textarea {
 .list_wrap .list_content_username{padding: 2px 0;}
 .list_wrap .list_content_text{padding: 2px 0;color: #999;}
 
-.qqLogin{text-align: center;}
-.qqLogin a{display: block;margin-top: 10px;}
-.qqLogin img{width: 115px;height: 24px;}
+.qqLogin{
+	display: block;background: url("/img/system/qq_login1.png") no-repeat;
+	width: 63px;height: 24px; margin: 0 auto;
+	overflow: hidden;
+}
+.qqLogin a{display: none;}
+.qqLoginOut{
+	background-color: #d02a2a;
+    border: 1px solid #c60000;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    font-size: 12px;
+    margin: 7px auto 0;
+    padding: 2px 5px;
+    width: 63px;
+}
+
 .ico_system{cursor: pointer;}
 .ico_wait{animation: 2s linear 0s normal none infinite rotate;color: #00AE04;}
 @keyframes rotate {

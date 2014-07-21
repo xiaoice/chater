@@ -4,12 +4,17 @@ var router = express.Router();
 
 //主模块，判断是否登录
 router.get('/', function (req, res) {
-  	//req.session.username = req.body.username;
-  	/*if (!req.session) {
+	console.log(app.session);
+  	if (!req.session) {
     	return res.redirect('/login.html');
 	}else{
 		return res.redirect('/list.html');
-	}*/
+	}
+});
+
+router.post('/login.do', function (req, res) {
+	console.log(req,req.body,req.params);
+    //res.render('login');
 });
 
 router.get('/login.html', function (req, res) {
