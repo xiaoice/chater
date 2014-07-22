@@ -13,6 +13,7 @@
 	</head>
 
 	<body>
+		<input id="openId" value="<%= openId %>" type="hidden">
 		<div class="chaters_wrap">
 			<div class="chaters_panel">
 				<div class="chaters_title_panel">
@@ -101,33 +102,10 @@
 		console.log("连接成功");
 	});
 
-	socket.on('connectionok', function (data) {
-		$(".chater_wrap_wait").hide();
-		return ;
-		initName(function(name){
-			var data={
-				type:"login"
-				,name:name
-				,text:"进入了聊天室"
-				,time:new Date().toLocaleString()
-			}
-			socket.emit("send",data);
-		});
-	});
 
 	//监听消息
-	socket.on('msgList', function (data) {
-		//若是新用户登录，广播
-		if(data.type==="login"){
-			createLoginText(data);
-		}
-		//若有用户退出，广播
-		else if(data.type==="loginout"){
-			createLoginoutText(data);
-		}
-		else{
-			createHtml(data);
-		}
+	socket.on('message', function (data) {
+		console.log(data);
 	});
 
 	function createHtml(data){
@@ -148,7 +126,8 @@
 		}
 
 		data={
-			type:"msgList"
+			openId:$("#openId").val()
+			,type:"msgList"
 			,text:text
 			,src:"/img/user3.png"
 			,location:"right"
@@ -156,7 +135,7 @@
 		}
 		createHtml(data);
 		data.name=default_name;
-		socket.emit('send', data);
+		socket.emit('message', data);
 		$content.val('');
 	});
 

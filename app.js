@@ -5,12 +5,15 @@ var io = require('socket.io')(server);
 var path = require('path');
 var ejs = require('ejs');
 var router = require('./routers/index');
-var favicon = require('static-favicon');
 var errorhandler = require('errorhandler');
 var session = require('express-session');
-var cookie = require('cookie');
 var MongoStore = require('connect-mongo')(session);
 var setting = require('./setting');
+
+var favicon = require('static-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser  = require('body-parser');
 
 
 /*app.use(session({
@@ -20,11 +23,15 @@ var setting = require('./setting');
     })
 }));*/
 
-/*app.use(session({
-  secret: 'my secret',
-  store: new MongoStore({'db': 'chater'})
-}));*/
+app.set('port', process.env.PORT || 80);
+app.set('views', path.join(__dirname, 'views'));
+app.engine('.html', ejs.__express);
+app.set('view engine', 'html');// app.set('view engine', 'ejs');
 
+app.use(favicon());
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 
 app.use(session({
     secret:setting.cookieSecret,
@@ -32,15 +39,7 @@ app.use(session({
     cookie:{maxAge:1000*60*60*24*30},
     store:new MongoStore({db:setting.db})
 }));
-
-app.set('port', process.env.PORT || 80);
-app.set('views', path.join(__dirname, 'views'));
-
-app.engine('.html', ejs.__express);
-app.set('view engine', 'html');// app.set('view engine', 'ejs');
-//app.use(favicon(path.join(__dirname, '/public/img/favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 app.use('/', router);
 
@@ -83,17 +82,25 @@ io.set('authorization', function(handshakeData, callback){
     }
 });*/
 
+
 io.on('connection', function (socket) {
   socket.emit('connectionok', "socket 连接成功");
-  //console.log('-session',socket.handshake);
   socket.on('login', function (data) {
-    socket.broadcast.emit('msgList', data);
+    socket.join(data.openId);
+    socket.broadcast.emit('online', data);
+  });
+
+  socket.on('loginOut', function (data) {
+    socket.broadcast.emit('loginOut', data);
+  });
+
+  socket.on('message', function (data) {
+    io.sockets.in(data.openId).emit('message', data);
   });
 
   socket.on('send', function (data) {
   	if(data.type==="login"){
-		app.set("username",data.name);
-		console.log(data.name+data.text);
+		  app.set("username",data.name);
   	}
   	socket.broadcast.emit('msgList', data);
   });
@@ -105,7 +112,6 @@ io.on('connection', function (socket) {
 	  		,text:"离开了聊天室"
 	  		,time:new Date().toLocaleString()
   		}
-  		console.log(data.name+data.text);
   		app.set("username",undefined);
   		socket.broadcast.emit('msgList', data);
   });
