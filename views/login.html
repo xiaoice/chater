@@ -54,7 +54,7 @@
             //昵称
             '<span>{nickname}</span>',
             //退出
-            '<span><a href="javascript:QC.Login.signOut();">退出</a></span>'    
+            '<span><a href="javascript:QC.Login.signOut();">退出</a></span>'
        ].join("");
        dom && (dom.innerHTML = QC.String.format(_logoutTemplate, {
            nickname : QC.String.escHTML(reqData.nickname), //做xss过滤
@@ -115,5 +115,10 @@
     if(QC.Login.check()){
       alert("注销成功！");
     }
+  });
+
+
+  $(".login_in").click(function(){
+    alert("暂时只支持QQ登录");
   });
 </script>

@@ -54,6 +54,10 @@ router.get('/login.html', function (req, res) {
 	}
 });
 
+router.get('/reg.html', function (req, res) {
+    res.render('reg',req.session.user);
+});
+
 //监听是否登录-session
 router.use(function(req, res, next){
   res.locals.user = req.session.user;
@@ -62,10 +66,6 @@ router.use(function(req, res, next){
   }
   //console.log('%s %s', req.method, req.url);
   next();
-});
-
-router.get('/reg.html', function (req, res) {
-    res.render('reg',req.session.user);
 });
 
 router.get('/list.html', function (req, res) {

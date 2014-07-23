@@ -56,18 +56,22 @@
     }
   }
 
-  //监听消息
+  //监听登录用户
   socket.on('login', function (data) {
-    console.log(data);
     createHtml(data);
   });
 
-  //监听消息
+  //监听退出用户
   socket.on('loginOut', function (data) {
-    console.log(data);
     var id="tpl_item_"+data.openId;
     $("#"+id).remove();
   });
 
+  //获取在线人数列表
+  $.get("onlines.do",function(data){
+    for(var i=0,j=data.length;i<j;i++){
+      createHtml(data[i]);
+    }
+  })
 
 </script>
