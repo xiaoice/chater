@@ -29,7 +29,7 @@ app.engine('.html', ejs.__express);
 app.set('view engine', 'html');// app.set('view engine', 'ejs');
 
 app.use(favicon());
-app.use(logger('dev'));
+//app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
@@ -85,18 +85,34 @@ io.set('authorization', function(handshakeData, callback){
 
 io.on('connection', function (socket) {
   socket.emit('connectionok', "socket 连接成功");
+  socket.join("10000");
+
+  //登录系统
   socket.on('login', function (data) {
-    socket.join(data.openId);
-    socket.broadcast.emit('online', data);
+    console.log(data.nickname+"上线了");
+    socket.broadcast.emit('login', data);
   });
 
   socket.on('loginOut', function (data) {
     socket.broadcast.emit('loginOut', data);
   });
 
-  socket.on('message', function (data) {
-    io.sockets.in(data.openId).emit('message', data);
+  //进入房间
+  socket.on('joinRoom', function (data) {
+    socket.join(data.receiveId);
+    console.log(data.nickname+"进入了房间，房间号："+data.receiveId);
   });
+
+  //发送消息
+  socket.on('sendRoomMessage', function (data) {
+    console.log(data.nickname+"发送了一条消息，房间号："+data.openId);
+    io.sockets.in(data.openId).emit('message', data);
+    io.sockets.in(data.receiveId).emit('message', data);
+    //socket.broadcast.emit(data.receiveId, data);
+    //socket.broadcast.to("10000").emit('message', data);
+  });
+
+
 
   socket.on('send', function (data) {
   	if(data.type==="login"){

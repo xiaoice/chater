@@ -134,7 +134,7 @@ input, button, select, textarea {
 	padding: 10px;font-size: 12px;color: #fff;
 	position: fixed;top: 41px;left: 0;width: 100%;z-index: 1000;text-align: center;
  	background-color: rgba(179, 15, 15, 0.66);
-    border: 1px dashed #600000;
+    border: 1px dashed #600000;display: none;
 }
 
 /*好友列表面板*/

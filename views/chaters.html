@@ -14,39 +14,20 @@
 
 	<body>
 		<input id="openId" value="<%= openId %>" type="hidden">
+		<input id="nickname" value="<%= nickname %>" type="hidden">
+		<input id="figureurl" value="<%= figureurl_qq_1 %>" type="hidden">
 		<div class="chaters_wrap">
 			<div class="chaters_panel">
 				<div class="chaters_title_panel">
-					<i class="icon-angle-left"></i>
-					<i class="icon-comments"></i>
-					<span class="chaters_title">群聊天</span>
+					<span onclick="history.back(-1)">
+						<i class="icon-angle-left"></i>
+						<i class="icon-comments"></i>
+					</span>
+					<span class="chaters_title">与张三聊天中</span>
 					<i class="icon-user pull-right"></i>
 				</div>
 				<div class="chaters_context_panel">
 					<div class="chaters_disconnect">你已经掉线</div>
-					<div class="chaters_item chaters_item_left">
-						<img class="chaters_user_img" src="/img/user3.png">
-						<div class="chaters_context_box">
-							<span class="chaters_context">你好啊啊爱的</span>
-							<span class="chaters_arrow icon-caret-left"></span>
-						</div>
-					</div>
-
-					<div class="chaters_item chaters_item_left">
-						<img class="chaters_user_img" src="/img/user3.png">
-						<div class="chaters_context_box">
-							<span class="chaters_context">你好啊啊你好啊啊爱的你好啊啊爱的你好啊啊爱的你好啊啊爱的你好啊啊爱的爱的</span>
-							<span class="chaters_arrow icon-caret-left"></span>
-						</div>
-					</div>
-
-					<div class="chaters_item chaters_item_right">
-						<img class="chaters_user_img" src="/img/user2.png">
-						<div class="chaters_context_box">
-							<span class="chaters_context">你好啊啊你好啊啊爱的你好啊啊爱的你好啊啊爱的你好啊啊爱的你好啊啊爱的爱的</span>
-							<span class="chaters_arrow icon-caret-right"></span>
-						</div>
-					</div>
 				</div>
 
 				<div class="chaters_input_panel">
@@ -60,7 +41,7 @@
 		<div class="hidden">
 			<div id="tpl_item">
 				<div class="chaters_item">
-					<img class="chaters_user_img" src="/img/user3.png">
+					<img class="chaters_user_img" src="">
 					<div class="chaters_context_box">
 						<span class="chaters_context">你好</span>
 						<span class="chaters_arrow"></span>
@@ -76,8 +57,18 @@
 <script>
 
 	var $document=$(document);
-	var default_name=undefined;
+	var roomId=request("id"),isDisconnect;
 	var client_height=$(document).height();
+
+	//自定义路由参数 demo: request("id")
+  	function request(name){
+		var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r!=null){
+		  return unescape(r[2]);
+		}
+		return null;
+   	}
 
 	//页面初始化函数
 	function pageInit(){
@@ -85,38 +76,48 @@
 		var titleHeight=$(".chaters_title_panel").outerHeight();
 		//获取输入框的高度
 		var inputHeight=$(".chaters_input_panel").outerHeight();
-		var contextHeight=client_height-titleHeight-inputHeight;
+		var contextHeight=$(document).height()-titleHeight-inputHeight;
 		$(".chaters_context_panel").outerHeight(contextHeight);
 	}
 
 	pageInit();
 
 	var socket = io(null);
-	//若连接上了服务器，启动程序
-	socket.on('disconnect', function (data) {
-		console.log("连接中断");
-		//alert(1);
-	});
 	socket.on('connect', function (data) {
-		//alert(2);
-		console.log("连接成功");
+		var data={
+			receiveId:roomId
+			,openId:$("#openId").val()
+			,nickname:$("#nickname").val()
+		}
+		socket.emit('joinRoom', data);
+		$(".chaters_disconnect").hide();
+		isDisconnect&&clearTimeout(isDisconnect);
 	});
 
+	//若连接上了服务器，启动程序
+	socket.on('disconnect', function (data) {
+		isDisconnect=setTimeout(function(){
+			$(".chaters_disconnect").show();
+		},1000);
+	});
 
 	//监听消息
 	socket.on('message', function (data) {
+		data.location=data.receiveId===roomId?"right":"left";
 		console.log(data);
+		createHtml(data);
 	});
 
 	function createHtml(data){
 		var $el=$("#tpl_item").children().clone();
 		$el.addClass("chaters_item_"+data.location);
 		$el.find(".chaters_arrow").addClass("icon-caret-"+data.location);
-		$el.find(".chaters_user_img").attr("src",data.src);
+		$el.find(".chaters_user_img").attr("title",data.nickname).attr("src",data.src+".png?"+new Date().getTime());
 		$el.find(".chaters_context").html(data.text);
 		$(".chaters_context_panel").append($el).scrollTop(99999);
 		return $el;
 	}
+
 
 	//点击发送按钮
 	$document.on("click","#bt_send",function(){
@@ -126,23 +127,22 @@
 		}
 
 		data={
-			openId:$("#openId").val()
+			receiveId:roomId
+			,openId:$("#openId").val()
+			,nickname:$("#nickname").val()
 			,type:"msgList"
 			,text:text
-			,src:"/img/user3.png"
+			,src:$("#figureurl").val()
 			,location:"right"
 			,time:new Date().toLocaleString()
 		}
-		createHtml(data);
-		data.name=default_name;
-		socket.emit('message', data);
+		socket.emit('sendRoomMessage', data);
 		$content.val('');
 	});
 
 	//文本输入框按下ctrl+enter发送消息
 	$document.on("keydown",".chaters_input",function(e){
 		if(e.keyCode===13){
-			$(".chaters_disconnect").html("ddd");
 			$("#bt_send").trigger("click");
 		}
 	});

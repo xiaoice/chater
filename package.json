@@ -4,8 +4,8 @@
   "description": "chater\r ======",
   "main": "app.js",
   "dependencies": {
-    "express": "",
-    "socket.io": ""
+    "express": "^4.6.1",
+    "socket.io": "^1.0.6"
   },
   "devDependencies": {
     "body-parser": "^1.5.0",

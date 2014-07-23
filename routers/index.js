@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var result = require('./result');
+var result = require('../models/result');
 
 //主模块，判断是否登录
 router.get('/', function (req, res) {
