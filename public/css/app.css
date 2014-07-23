@@ -147,9 +147,9 @@ input, button, select, textarea {
 	border-top: 1px solid #565656;
 	padding: 10px 10px;color: #fff;
 }
-.list_wrap .list_title{font-size: 14px; color: #E7E7E7;}
+.list_wrap .list_title{}
 .list_wrap .list_context_panel{background-color: #f6f6f6;overflow: auto;}
-.list_wrap .list_item{padding: 5px 10px;position: relative;overflow: hidden;border-bottom: 1px solid #ccc;text-decoration: none;display: block;color: #333;}
+.list_wrap .list_item{padding: 5px 10px;position: relative;overflow: hidden;border-bottom: 1px solid #ccc;}
 .list_wrap .list_item:hover{background-color: #E7E7E7;cursor: pointer;}
 .list_wrap .list_user_img{
 	width: 38px;height: 38px;border-width: 0; border-radius: 3px;
@@ -166,10 +166,16 @@ input, button, select, textarea {
 }
 .qqLogin a{display: none;}
 .qqLoginOut{
+	background-color: #d02a2a;
+    border: 1px solid #c60000;
+    border-radius: 4px;
     color: #fff;
     cursor: pointer;
+    display: block;
     font-size: 12px;
-    text-decoration: none;
+    margin: 7px auto 0;
+    padding: 2px 5px;
+    width: 63px;
 }
 
 .ico_system{cursor: pointer;}
