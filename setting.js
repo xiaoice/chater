@@ -1,6 +1,6 @@
     var setting = {
         cookieSecret: "jspjs.com",
         db: "chater"
-	  	,host: 'localhost'
+	  	,host: '127.0.0.1'
     };
     module.exports = setting;

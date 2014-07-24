@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var result = require('../models/result');
+var User = require('../models/user.js');
+
 
 //主模块，判断是否登录
 router.get('/', function (req, res) {
@@ -43,6 +45,31 @@ router.get('/loginOut.do', function (req, res) {
 });
 
 router.get('/login.html', function (req, res) {
+
+	var newUser = new User({
+		name: "test",
+		password: 123456
+	});
+	//检查用户名是否已经存在
+	User.get(newUser.name, function(err, user) {
+		if (user) {
+			console.log('error', '用户已存在!');
+			//return res.redirect('/reg'); //返回注册页
+		}
+		//如果不存在则新增用户
+		newUser.save(function(err, user) {
+			if (err) {
+				req.flash('error', err);
+				//return res.redirect('/reg'); //注册失败返回主册页
+			}
+			//req.session.user = user; //用户信息存入 session
+			console.log(user);
+			//console.log(req.session.user);
+			console.log('success', '注册成功!');
+		});
+	});
+
+
 	if (req.session.user) {
 		if(req.query.type==="loginOut"){
 			res.render('login');

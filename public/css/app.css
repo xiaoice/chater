@@ -178,3 +178,57 @@ input, button, select, textarea {
 	0% {transform: rotate(0deg);}
 	100% {transform: rotate(359deg);}
 }
+
+
+
+.msg-box{
+	position: fixed;left: 0;top: 0;
+	width: 100%;height: 100%;
+	padding: 40% 12%;
+	background-color: rgba(0, 0, 0, 0.7);
+	z-index: 1000;
+}
+.msg-box-panel{
+    left: 12%;
+    transform:translateY(-50%);
+    position: fixed;
+    top: 50%;
+	background-color: #fff;
+    border-radius: 4px;
+    width: 76%;
+}
+.msg-box-icons{
+	padding: 13px 0;
+}
+
+
+[class*='msg-icon-']{
+    height: 38px;
+    margin: 0 auto;
+    width: 36px;
+    background-image: url("../../img/zhongyuan/icons1.png");
+    background-repeat: no-repeat;
+    background-size: 250px;
+}
+.msg-icon-ok{
+	background-position: 0 -160px;
+}
+.msg-icon-info{
+	background-position: 0 -208px;
+}
+.msg-icon-error{
+	background-position: 0 -257px;
+}
+.msg-icon-wait{
+	background-position: 0 -208px;
+	-webkit-animation:1s linear 0.2s normal both infinite rotate;
+	-moz-animation:1s linear 0.2s normal both infinite rotate;
+	animation:1s linear 0.2s normal both infinite rotate;
+}
+
+.msg-box-body{
+	text-align: center;
+	font-size: 15px;
+	color: #65343C;
+	padding: 0 10px 10px;
+}

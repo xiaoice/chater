@@ -11,7 +11,8 @@ var MongoStore = require('connect-mongo')(session);
 var setting = require('./setting');
 var favicon = require('static-favicon');
 var logger = require('morgan');
-var bodyParser  = require('body-parser');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 
 
 /*app.use(session({
@@ -25,7 +26,7 @@ app.set('port', process.env.PORT || 80);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.html', ejs.__express);
 app.set('view engine', 'html');// app.set('view engine', 'ejs');
-
+app.use(cookieParser());
 app.use(favicon());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
