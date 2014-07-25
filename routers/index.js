@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var result = require('../models/result');
-var User = require('../models/user.js');
+var users = require('../models/users');
 
 
 //主模块，判断是否登录
@@ -44,12 +44,29 @@ router.get('/loginOut.do', function (req, res) {
 	}
 });
 
-router.get('/login.html', function (req, res) {
+//注册用户
+router.post('/reg.do', function (req, res) {
+	var params=req.body;
+	var _params={
+		openId:params.openId
+		,nickname:params.nickname
+		,gender:params.gender
+		,figureurl:params.figureurl
+		,figureurl_1:params.figureurl_1
+		,figureurl_2:params.figureurl_2
+		,figureurl_qq_1:params.figureurl_qq_1
+		,figureurl_qq_2:params.figureurl_qq_2
+		,province:params.province
+		,city:params.city
+	}
 
-	var newUser = new User({
-		name: "test",
-		password: 123456
+	var user = new User({
+		nickname: req.body.nickname,
+		userName: req.body.userName,
+		gender: req.body.gender,
+		password: req.body.password
 	});
+
 	//检查用户名是否已经存在
 	User.get(newUser.name, function(err, user) {
 		if (user) {
@@ -68,6 +85,35 @@ router.get('/login.html', function (req, res) {
 			console.log('success', '注册成功!');
 		});
 	});
+	req.session.user=user;
+	req.session.save();
+	res.json(result.ok(req.session.user));
+});
+
+router.get('/login.html', function (req, res) {
+
+	/*//检查用户名是否已经存在
+	var newUser = new User({
+		name: "test",
+		password: 123456
+	});
+	User.get(newUser.name, function(err, user) {
+		if (user) {
+			console.log('error', '用户已存在!');
+			//return res.redirect('/reg'); //返回注册页
+		}
+		//如果不存在则新增用户
+		newUser.save(function(err, user) {
+			if (err) {
+				req.flash('error', err);
+				//return res.redirect('/reg'); //注册失败返回主册页
+			}
+			//req.session.user = user; //用户信息存入 session
+			console.log(user);
+			//console.log(req.session.user);
+			console.log('success', '注册成功!');
+		});
+	});*/
 
 
 	if (req.session.user) {
