@@ -4,7 +4,7 @@ var server = require('http').Server(app);
 require('./controller/socket')(app,server);
 var path = require('path');
 var ejs = require('ejs');
-var router = require('./routers/index');
+var router = require('./routers/loginAction');
 var errorhandler = require('errorhandler');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);

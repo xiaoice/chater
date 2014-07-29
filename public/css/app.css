@@ -77,7 +77,8 @@ input, button, select, textarea {
     background: -o-linear-gradient(center top,#fff, #E5FFCD);
     display: block;
 }
-.login_wrap .reg_username{border-radius: 4px;}
+.login_wrap .reg_username{border-radius: 4px 4px 0 0;}
+.login_wrap .reg_nickname{border-radius: 0 0 4px 4px;margin-top: -1px;}
 .login_wrap .reg_password{border-radius: 4px 4px 0 0;margin-top: 7px;}
 .login_wrap .reg_passwords{border-radius: 0 0 4px 4px;margin-top: -1px;}
 

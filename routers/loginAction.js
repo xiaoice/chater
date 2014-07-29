@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var result = require('../models/result');
-var users = require('../models/users');
+var User = require('../models/User');
 
 
 //主模块，判断是否登录
@@ -45,7 +45,7 @@ router.get('/loginOut.do', function (req, res) {
 });
 
 //注册用户
-router.post('/reg.do', function (req, res) {
+router.post('/reg1.do', function (req, res) {
 	var params=req.body;
 	var _params={
 		openId:params.openId
@@ -86,6 +86,31 @@ router.post('/reg.do', function (req, res) {
 		});
 	});
 	req.session.user=user;
+	req.session.save();
+	res.json(result.ok(req.session.user));
+});
+
+//注册用户
+router.post('/reg.do', function (req, res) {
+	var userModel = new User({
+		userName: req.body.userName
+		,password: req.body.password
+		,nickname: req.body.nickname
+	});
+
+	//检查用户名是否已经存在
+	User.get(userModel.name, function(err, user) {
+		if (user) {
+			return res.json(result.error("用户名已经存在"));
+		}
+		//如果不存在则新增用户
+		userModel.insert(function(err, user) {
+			if (err) {
+				return res.json(result.error(err));
+			}
+		});
+	});
+	req.session.user=userModel;
 	req.session.save();
 	res.json(result.ok(req.session.user));
 });
