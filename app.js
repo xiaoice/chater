@@ -1,14 +1,14 @@
 var express=require('express');
 var app = express();
 var server = require('http').Server(app);
-require('./controller/socket')(app,server);
+require('./controller/service/socketService')(app,server);
 var path = require('path');
 var ejs = require('ejs');
-var router = require('./routers/loginAction');
-var errorhandler = require('errorhandler');
+var router = require('./routers/loginRouter');
+//var errorhandler = require('errorhandler');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
-var setting = require('./setting');
+var setting = require('./controller/models/setting');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
@@ -53,7 +53,7 @@ router.get('/onlines.do', function (req, res) {
 if (process.env.NODE_ENV === 'development') {
 	 console.log("development");
    app.use(logger('dev'));
-   app.use(errorhandler())
+   //app.use(errorhandler())
 }
 
 server.listen(app.get('port'),function(){

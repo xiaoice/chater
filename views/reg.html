@@ -17,12 +17,12 @@
                 <div class="login_logo_text">用户注册</div>
                 <div class="login_input_div">
                     <a class="login_tip">请输入密码</a>
-                    <input type="text" id="" class="login_input reg_username" placeholder="请输入用户名">
-                    <input type="text" id="" class="login_input reg_nickname" placeholder="请输入昵称">
-                    <input type="text" id="" class="login_input reg_password" placeholder="请输入密码">
-                    <input type="text" id="" class="login_input reg_passwords" placeholder="请再次输入密码">
+                    <input type="text" class="login_input reg_username" placeholder="请输入用户名">
+                    <input type="text" class="login_input reg_nickname" placeholder="请输入昵称">
+                    <input type="text" class="login_input reg_password" placeholder="请输入密码">
+                    <input type="text" class="login_input reg_passwords" placeholder="请再次输入密码">
                 </div>
-                <input type="button" value="注  册" class="login_button login_in">
+                <input id="bt_reg" type="button" value="注  册" class="login_button login_in">
                 <a href="login.html" class="login_button login_back">返回登录</a>
             </div>
         </div>
@@ -33,10 +33,15 @@
     var $document=$(document);
     var default_name=undefined;
     var para={
-        
+        username:$(".reg_username").val()
+        ,nickname:$(".reg_nickname").val()
+        ,password:$(".reg_password").val()
     }
-    $.post("/login.do",{},function(){
 
-    });
+    $document.on("click","#bt_reg",function(){
+        $.post("/reg.do",para,function(result){
+            console.log(result);
+        });
+    })
 
 </script>

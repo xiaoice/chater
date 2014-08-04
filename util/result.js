@@ -10,7 +10,7 @@ function result(recode,msg,data){
 }
 
 exports.result=result;
-exports.fail=function(msg,data){
+exports.error=function(msg,data){
 	if(arguments.length===1&& typeof arguments[0]==="object"){
 		return result(0,"FAIL",arguments[0]||{})
 	}else{

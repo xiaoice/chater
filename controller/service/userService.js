@@ -1,41 +1,15 @@
-var mongodb = require('./db');
 var moment = require('moment');
+var userModel = require('../models/userModel');
+var mongodb = require('../models/db');
 
 
-function User(user) {
-	this.userId = user.userId;
-	this.userName = user.userName;
-	this.password=user.password;
-	this.nickname=user.nickname;
-	this.gender=user.gender;
-	this.userImg=user.userImg;
-	this.createTime=user.createTime;
-	this.updateTime=user.updateTime;
-	this.lastLoginTime=user.lastLoginTime;
-	this.lastLoginIp=user.lastLoginIp;
-	this.loginCount=user.loginCount;
-	this.qqOpenId=user.qqOpenId;
-};
-
-module.exports = User;
+function userService(user){
+	this.user=new userModel(user);
+}
 
 //存储用户信息
-User.prototype.insert = function(callback) {
-	//要存入数据库的用户文档
-	var user = {
-		userId:this.userId
-		,userName:this.userName
-		,password:this.password
-		,nickname:this.nickname
-		,gender:this.gender
-		,userImg:this.userImg
-		,createTime:this.createTime||moment.format()
-		,updateTime:this.updateTime
-		,lastLoginTime:this.lastLoginTime
-		,lastLoginIp:this.lastLoginIp
-		,loginCount:this.loginCount
-		,qqOpenId:this.qqOpenId
-	};
+userService.prototype.insert = function(callback) {
+	var user=this.user;
 	//打开数据库
 	mongodb.open(function(err, db) {
 		if (err) {
@@ -61,8 +35,8 @@ User.prototype.insert = function(callback) {
 	});
 };
 
-//根据条件获取用户信息 
-User.get = function(wheres, callback) {
+//根据条件获取用户信息
+userService.prototype.get = function(wheres, callback) {
 	wheres=wheres||{};
 	//打开数据库
 	mongodb.open(function(err, db) {
@@ -88,22 +62,24 @@ User.get = function(wheres, callback) {
 };
 
 //根据userId获取用户信息
-User.getByUserId = function(userId, callback) {
-	User.get({
+userService.getByUserId = function(userId, callback) {
+	userService.get({
 		userId:userId
 	},callback)
 };
 
 //根据userId获取用户信息
-User.getByUserId = function(userId, callback) {
-	User.get({
-		userId:userId
+userService.getByUserName = function(userId, callback) {
+	userService.get({
+		userName:userName
 	},callback)
 };
 
 //根据qqOpenId获取用户信息
-User.getByUserId = function(qqOpenId, callback) {
-	User.get({
+userService.getByUserOpenId = function(qqOpenId, callback) {
+	userService.get({
 		qqOpenId:qqOpenId
 	},callback)
 };
+
+module.exports=userService;
