@@ -18,10 +18,10 @@
 			$(".msg-box").remove();
 			html+='<div class="msg-box">';
 			html+='<div class="msg-box-panel">';
-			html+='<div class="msg-box-icons">';
-			html+='<div class="msg-icon-'+opts.icon+'"></div>';
+			html+='<div class="msg-box-icon">';
+			html+='<span class="msg-icon '+opts.icon+'"></span>';
 			html+='</div>';
-			html+='<div class="msg-box-body">'+opts.html+'</div>';
+			html+='<span class="msg-text">'+opts.html+'</span>';
 			html+='</div>';
 			html+='</div>';
 			$target=$(html).appendTo("body");
@@ -60,19 +60,19 @@
 			},opts.timeout*1000);
 		}
 		,ok:function(){
-			this.icon="ok";
+			this.icon="icon-ok-sign msg-icon-ok";
 			this.show.apply(this,arguments);
 		}
 		,info:function(){
-			this.icon="info";
+			this.icon="icon-info-sign msg-icon-info";
 			this.show.apply(this,arguments);
 		}
 		,error:function(){
-			this.icon="error";
+			this.icon="icon-remove-sign msg-icon-error";
 			this.show.apply(this,arguments);
 		}
 		,wait:function(){
-			this.icon="wait";
+			this.icon="icon-spinner rotate msg-icon-wait";
 			this.show.apply(this,arguments);
 		}
 	}

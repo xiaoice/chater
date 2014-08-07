@@ -6,7 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>用户登录</title>
         <link rel="stylesheet" type="text/css" href="/css/app.css">
+        <link rel="stylesheet" type="text/css" href="/plugins/Font-Awesome/css/font-awesome.min.css">
         <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="/js/msg.js"></script>
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     </head>
 
@@ -19,8 +21,8 @@
                     <a class="login_tip">请输入密码</a>
                     <input type="text" class="login_input reg_username" placeholder="请输入用户名">
                     <input type="text" class="login_input reg_nickname" placeholder="请输入昵称">
-                    <input type="text" class="login_input reg_password" placeholder="请输入密码">
-                    <input type="text" class="login_input reg_passwords" placeholder="请再次输入密码">
+                    <input type="password" class="login_input reg_password" placeholder="请输入密码">
+                    <input type="password" class="login_input reg_passwords" placeholder="请再次输入密码">
                 </div>
                 <input id="bt_reg" type="button" value="注  册" class="login_button login_in">
                 <a href="login.html" class="login_button login_back">返回登录</a>
@@ -32,16 +34,37 @@
 <script>
     var $document=$(document);
     var default_name=undefined;
-    var para={
-        username:$(".reg_username").val()
-        ,nickname:$(".reg_nickname").val()
-        ,password:$(".reg_password").val()
-    }
 
     $document.on("click","#bt_reg",function(){
+        var para={
+            username:$(".reg_username").val()
+            ,nickname:$(".reg_nickname").val()
+            ,password:$(".reg_password").val()
+            ,passwords:$(".reg_passwords").val()
+        }
+
+        if(para.username===""){
+            return msg.error("用户名不能为空");
+        }
+        else if(para.nickname===""){
+            return msg.error("昵称不能为空");
+        }
+        else if(para.password===""){
+            return msg.error("密码不能为空");
+        }
+        else if(para.password!==passwords){
+            return msg.error("二次密码输入不一致");
+        }
+
+        //点击注册按钮
         $.post("/reg.do",para,function(result){
-            console.log(result);
+            if(result.recode==1){
+                msg.ok(result.msg);
+            }else{
+                msg.error(result.msg);
+            }
         });
+        
     })
 
 </script>
