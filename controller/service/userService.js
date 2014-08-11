@@ -4,7 +4,7 @@ var mongodb = require('../models/db');
 
 
 function userService(user){
-	this.user=new userModel(user);
+	this.user=new userModel(user||{});
 }
 
 //存储用户信息
@@ -36,7 +36,7 @@ userService.prototype.insert = function(callback) {
 };
 
 //根据条件获取用户信息
-userService.prototype.get = function(wheres, callback) {
+userService.prototype.findOne = function(wheres, callback) {
 	wheres=wheres||{};
 	//打开数据库
 	mongodb.open(function(err, db) {
@@ -61,25 +61,29 @@ userService.prototype.get = function(wheres, callback) {
 	});
 };
 
-//根据userId获取用户信息
-userService.getByUserId = function(userId, callback) {
-	userService.get({
-		userId:userId
-	},callback)
-};
-
-//根据userId获取用户信息
-userService.getByUserName = function(userId, callback) {
-	userService.get({
-		userName:userName
-	},callback)
-};
-
-//根据qqOpenId获取用户信息
-userService.getByUserOpenId = function(qqOpenId, callback) {
-	userService.get({
-		qqOpenId:qqOpenId
-	},callback)
+//根据条件获取用户信息
+userService.prototype.find = function(wheres, callback) {
+	wheres=wheres||{};
+	//打开数据库
+	mongodb.open(function(err, db) {
+		if (err) {
+			return callback(err); //错误，返回 err 信息
+		}
+		//读取 users 集合
+		db.collection('users', function(err, collection) {
+			if (err) {
+				mongodb.close();
+				return callback(err); //错误，返回 err 信息
+			}
+			collection.find(wheres).toArray(function(err, users) {
+				mongodb.close();
+				if (err) {
+					return callback(err); //失败！返回 err 信息
+				}
+				callback(null, users); //成功！返回查询的用户信息
+			});
+		});
+	});
 };
 
 module.exports=userService;

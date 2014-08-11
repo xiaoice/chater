@@ -195,21 +195,24 @@ input, button, select, textarea {
 	width: 100%;height: 100%;
 	background-color: rgba(0, 0, 0, 0.2);
 	z-index: 1000;
-	display: flex;
+	display: block;
 }
 .msg-box-panel{
 	background-color: #fff;
 	box-shadow: 1px 1px 2px #1f1f1f;
     border-radius: 5px;
     padding: 10px 15px;
-    margin: auto;
+    margin: 0 auto;
+    position: absolute;left: 50%;top: 50%;
+    transform: translate(-50%);
+    -webkit-transform: translate(-50%);
     background-color: #1b1b1b;
     border: 1px solid #000;
     color: #fff;
 }
 .msg-box-icon{
 	padding-bottom: 5px;
-	display:flex;
+	text-align: center;
 	font-size: 24px;
 }
 

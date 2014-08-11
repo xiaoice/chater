@@ -4,12 +4,12 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta property="qc:admins" content="17376517276230236375" />
         <title>用户列表</title>
         <link rel="stylesheet" type="text/css" href="/plugins/Font-Awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="/css/app.css">
         <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="/js/msg.js"></script>
     </head>
 
     <body>
@@ -18,7 +18,7 @@
               <div class="list_title_panel">
                 <i class="icon-comments"></i>
                 <span class="list_title"><%= nickname %></span>
-                <a href="login.html?type=loginOut" class="qqLoginOut pull-right" title="退出登录"><i class="icon-signout"></i> 退出</a>
+                <a id="bt_loginout" href="javascript:;" class="qqLoginOut pull-right" title="退出登录"><i class="icon-signout"></i> 退出</a>
               </div>
               <div class="list_context_panel"></div>
             </div>
@@ -39,22 +39,11 @@
 </html>
 
 <script type="text/javascript">
-  var socket = io(null);
+  var $document=$(document);
+ /* var socket = io(null);
   socket.on('connectionok', function (data) {
     console.log("连接成功");
   });
-
-  //创建html
-  function createHtml(data){
-    var $el=$("#tpl_item").children().clone();
-    var id="tpl_item_"+data.openId;
-    if($("#"+id).size()===0){
-      $el.attr("id","tpl_item_"+data.openId).attr("href","chaters.html?id="+data.openId);
-      $el.find(".list_content_username").html(data.nickname);
-      $el.find(".list_user_img").attr("src",data.figureurl_qq_1);
-      $el.appendTo(".list_context_panel");
-    }
-  }
 
   //监听登录用户
   socket.on('login', function (data) {
@@ -65,13 +54,42 @@
   socket.on('loginOut', function (data) {
     var id="tpl_item_"+data.openId;
     $("#"+id).remove();
-  });
+  });*/
+
+  //创建html
+  function createHtml(data){
+    var $el=$("#tpl_item").children().clone();
+    if($("#tpl_item_"+data._id).size()===0){
+      $el.attr("id","tpl_item_"+data._id).attr("href","chaters.html?id="+data._id);
+      $el.find(".list_content_username").html(data.nickname);
+      //$el.find(".list_user_img").attr("src",data.figureurl_qq_1);
+      $el.appendTo(".list_context_panel");
+    }
+  }
 
   //获取在线人数列表
-  $.get("onlines.do",function(data){
+/*  $.get("onlines.do",function(data){
     for(var i=0,j=data.length;i<j;i++){
       createHtml(data[i]);
     }
-  })
+  })*/
+
+  //获取所有用户列表
+  $.get("/list.do",function(result){
+    if(result&&result.data){
+      for(var i=0,j=result.data.length;i<j;i++){
+        createHtml(result.data[i]);
+      }
+    }
+  });
+
+  //点击注销
+  $document.on("click","#bt_loginout",function(){
+     $.get("/loginOut.do",function(result){
+        msg.ok("注销成功",1,function(){
+          window.location.href="login.html";
+        });
+     });
+  });
 
 </script>

@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta property="qc:admins" content="17376517276230236375" />
         <title>用户登录</title>
+        <link rel="stylesheet" type="text/css" href="/plugins/Font-Awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="/css/app.css">
         <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="/js/msg.js"></script>
@@ -19,10 +20,10 @@
                 <div class="login_logo_text">用户登录</div>
                 <div class="login_input_div">
                     <a class="login_tip">请输入密码</a>
-                    <input type="text" id="" class="login_input login_username" placeholder="请输入用户名">
-                    <input type="text" id="" class="login_input login_password" placeholder="请输入密码">
+                    <input type="text" id="username" class="login_input login_username" placeholder="请输入用户名">
+                    <input type="password" id="password" class="login_input login_password" placeholder="请输入密码">
                 </div>
-                <input type="button" value="登  录" class="login_button login_in">
+                <input id="login_in" type="button" value="登  录" class="login_button login_in">
                 <a href="reg.html" class="login_a_text">注册</a>
                 <a href="forget.html" class="login_a_text">忘记密码</a>
                 <a class="qqLogin" id="qqLoginBtn" href="https://graph.qq.com/oauth2.0/authorize?client_id=101140406&response_type=token&scope=all&redirect_uri=http://127.0.0.1"></a>
@@ -31,11 +32,36 @@
     </body>
 </html>
 
-<script type="text/javascript" src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="101140406" data-redirecturi="http://127.0.0.1" charset="utf-8"></script>
+<!-- <script type="text/javascript" src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="101140406" data-redirecturi="http://127.0.0.1" charset="utf-8"></script> -->
 <script type="text/javascript">
   var socket = io(null);
   socket.on('connectionok', function (data) {
    console.log("连接成功");
+  });
+
+  $("#login_in").click(function(){
+    var para={
+      username:$("#username").val()
+      ,password:$("#password").val()
+    };
+
+    if(para.username===""){
+      return msg.ok("用户名不能为空！");
+    }else if(para.password===""){
+      return msg.ok("密码不能为空！");
+    }else{
+      //点击注册按钮
+      $.post("/login.do",para,function(result){
+        console.log(result);
+          if(result.recode==1){
+              msg.ok(result.msg,1,function(){
+                window.location.reload();
+              });
+          }else{
+              msg.error(result.msg);
+          }
+      });
+    }
   });
 
   //调用QC.Login方法，指定btnId参数将按钮绑定在容器节点中
@@ -66,7 +92,7 @@
    });*/
 
   //自定义路由参数 demo: request("id")
-  function request(name){
+  /*function request(name){
       var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
       var r = window.location.search.substr(1).match(reg);
       if (r!=null){
@@ -103,11 +129,11 @@
       //alert("获取用户信息完成！");
     });
 
-    /*if(QC.Login.check()){//如果已登录
+    if(QC.Login.check()){//如果已登录
       QC.Login.getMe(function(openId, accessToken){
           //alert(["当前登录用户的", "openId为："+openId, "accessToken为："+accessToken].join("\n"));
       });
-    }*/
+    }
   }
 
   //退出登录
@@ -116,10 +142,5 @@
     if(QC.Login.check()){
       alert("注销成功！");
     }
-  });
-
-
-  $(".login_in").click(function(){
-    msg.ok("暂时只支持QQ登录");
-  });
+  });*/
 </script>

@@ -4,7 +4,7 @@ var _ = require('../../util/underscore');
 //user实体类
 var __user = {
 	userId:undefined
-	,userName:undefined
+	,username:undefined
 	,password:undefined
 	,nickname:undefined
 	,gender:undefined
@@ -20,7 +20,7 @@ var __user = {
 function User(user) {
 	user=_.extend(__user,user||{});
 	this.userId = user.userId;
-	this.userName = user.userName;
+	this.username = user.username;
 	this.password=user.password;
 	this.nickname=user.nickname;
 	this.gender=user.gender;

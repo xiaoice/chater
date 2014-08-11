@@ -33,8 +33,9 @@
 
 <script>
     var $document=$(document);
-    var default_name=undefined;
 
+
+    //点击注册
     $document.on("click","#bt_reg",function(){
         var para={
             username:$(".reg_username").val()
@@ -52,19 +53,20 @@
         else if(para.password===""){
             return msg.error("密码不能为空");
         }
-        else if(para.password!==passwords){
+        else if(para.password!==para.passwords){
             return msg.error("二次密码输入不一致");
         }
 
         //点击注册按钮
         $.post("/reg.do",para,function(result){
             if(result.recode==1){
-                msg.ok(result.msg);
+                msg.ok(result.msg,1,function(){
+                    window.location.href="login.html";
+                });
             }else{
                 msg.error(result.msg);
             }
         });
-        
     })
 
 </script>
