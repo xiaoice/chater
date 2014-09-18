@@ -1,4 +1,4 @@
 chater
 ======
 
-chater nodejs with socket.io
+chater nodejs with nodejs、express4、socket.io、angular
