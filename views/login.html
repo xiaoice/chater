@@ -1,146 +1,63 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta property="qc:admins" content="17376517276230236375" />
-        <title>用户登录</title>
-        <link rel="stylesheet" type="text/css" href="/plugins/Font-Awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="/css/app.css">
-        <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
-        <script type="text/javascript" src="/js/msg.js"></script>
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    </head>
-
-    <body>
-        <div class="login_wrap">
-            <div class="login_panel">
-                <div class="login_logo"></div>
-                <div class="login_logo_text">用户登录</div>
-                <div class="login_input_div">
-                    <a class="login_tip">请输入密码</a>
-                    <input type="text" id="username" class="login_input login_username" placeholder="请输入用户名">
-                    <input type="password" id="password" class="login_input login_password" placeholder="请输入密码">
-                </div>
-                <input id="login_in" type="button" value="登  录" class="login_button login_in">
-                <a href="reg.html" class="login_a_text">注册</a>
-                <a href="forget.html" class="login_a_text">忘记密码</a>
-                <a class="qqLogin" id="qqLoginBtn" href="https://graph.qq.com/oauth2.0/authorize?client_id=101140406&response_type=token&scope=all&redirect_uri=http://127.0.0.1"></a>
-            </div>
-        </div>
-    </body>
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'>
+	<title>用户登录</title>
+	<link rel="stylesheet" type="text/css" href="plugins/Font-Awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="css/app.css">
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/msg.js"></script>
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+<body class="body-layer login-layer">
+	<header class="body-header">
+		用户登录
+	</header>
+	<bodyer class="body-bodyer">
+		<div class="login-logo">
+			<img src="image/logo.png" />
+		</div>
+		<form id="form" action="">
+			<div class="form-group">
+				 <input name="username" type="text" placeholder="请输入用户名" class="login-username" id="username">
+	             <input name="password" type="password" placeholder="请输入密码" class="login-password" id="password">
+			</div>
+			<div class="btn-box">
+				<button id="bt_submit" type="submit" class="btn-default btn-success">登  录</button>
+				<a href="reg.html" class="btn-default btn-normal">注  册</a>
+			</div>
+		</form>
+	</bodyer>
+</body>
 </html>
 
-<!-- <script type="text/javascript" src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="101140406" data-redirecturi="http://127.0.0.1" charset="utf-8"></script> -->
-<script type="text/javascript">
-  var socket = io(null);
-  socket.on('connectionok', function (data) {
-   console.log("连接成功");
-  });
+<script>
+	var $document=$(document);
+	$document.submit("#form",function(){
+		var para={
+			username:$("#username").val()
+			,password:$("#password").val()
+		}
+		if(para.username===""){
+			msg.info("用户名不能为空");
+			return false;
+		}else if(para.password===""){
+			msg.info("密码不能为空");
+			return false;
+		}else{
+	      //点击注册按钮
+	      $.post("/login.do",para,function(result){
+	          if(result.recode==1){
+	              msg.ok(result.msg,1,function(){
+	                window.location.reload();
+	              });
+	          }else{
+	              msg.error(result.msg);
+	          }
+	      });
+	      return false;
+	    }
+	})
 
-  $("#login_in").click(function(){
-    var para={
-      username:$("#username").val()
-      ,password:$("#password").val()
-    };
-
-    if(para.username===""){
-      return msg.ok("用户名不能为空！");
-    }else if(para.password===""){
-      return msg.ok("密码不能为空！");
-    }else{
-      //点击注册按钮
-      $.post("/login.do",para,function(result){
-        console.log(result);
-          if(result.recode==1){
-              msg.ok(result.msg,1,function(){
-                window.location.reload();
-              });
-          }else{
-              msg.error(result.msg);
-          }
-      });
-    }
-  });
-
-  //调用QC.Login方法，指定btnId参数将按钮绑定在容器节点中
-  /*QC.Login({
-       //btnId：插入按钮的节点id，必选
-       btnId:"qqLoginBtn",
-       //用户需要确认的scope授权项，可选，默认all
-       scope:"all",
-       //按钮尺寸，可用值[A_XL| A_L| A_M| A_S|  B_M| B_S| C_S]，可选，默认B_S
-       size: "A_XL"
-   }, function(reqData, opts){//登录成功
-       //根据返回数据，更换按钮显示状态方法
-       var dom = document.getElementById(opts['btnId']),
-       _logoutTemplate=[
-            //头像
-            '<span><img src="{figureurl}" class="{size_key}"/></span>',
-            //昵称
-            '<span>{nickname}</span>',
-            //退出
-            '<span><a href="javascript:QC.Login.signOut();">退出</a></span>'
-       ].join("");
-       dom && (dom.innerHTML = QC.String.format(_logoutTemplate, {
-           nickname : QC.String.escHTML(reqData.nickname), //做xss过滤
-           figureurl : reqData.figureurl
-       }));
-   }, function(opts){//注销成功
-         alert('QQ登录 注销成功');
-   });*/
-
-  //自定义路由参数 demo: request("id")
-  /*function request(name){
-      var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
-      var r = window.location.search.substr(1).match(reg);
-      if (r!=null){
-          return unescape(r[2]);
-      }
-      return null;
-  }
-
-  if(request("type")==="loginOut"){
-    $.get("/loginOut.do",function(result){
-      if(result&&result.recode==1){
-        QC.Login.signOut();
-        socket.emit('loginOut', result.data);
-      }
-    })
-  }else{
-    //监听QQ是否登录成功
-    QC.api("get_user_info", {}).success(function(QQResult){
-      QC.Login.getMe(function(openId, accessToken){
-        QQResult.data.openId=openId;
-        $.post("/login.do",QQResult.data,function(result){
-          if(result&&result.recode==1){
-            console.log(result.data);
-              socket.emit('login', result.data);
-              setTimeout(function(){
-                window.location.href="list.html";
-              },1000);
-          }
-        });
-      })
-    }).error(function(){
-      //alert("获取用户信息失败！");
-    }).complete(function(){
-      //alert("获取用户信息完成！");
-    });
-
-    if(QC.Login.check()){//如果已登录
-      QC.Login.getMe(function(openId, accessToken){
-          //alert(["当前登录用户的", "openId为："+openId, "accessToken为："+accessToken].join("\n"));
-      });
-    }
-  }
-
-  //退出登录
-  $(".qqLoginOut").click(function(){
-    QC.Login.signOut();
-    if(QC.Login.check()){
-      alert("注销成功！");
-    }
-  });*/
 </script>

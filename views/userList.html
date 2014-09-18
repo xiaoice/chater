@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'>
+	<title>用户列表</title>
+	<link rel="stylesheet" type="text/css" href="plugins/Font-Awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="css/app.css">
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.touch.js?v=6"></script>
+	<script type="text/javascript" src="js/msg.js"></script>
+</head>
+<body class="body-layer userList-layer">
+	<header class="body-header">
+		<a id="header_menu" class="icon-menu"></a>
+		用户列表
+
+		<nav class="panel-menu">
+			<a href="search.html" class="item">添加好友</a>
+			<a class="item">关于</a>
+			<a href="/loginOut.do" class="item">注销</a>
+		</nav>
+	</header>
+	<bodyer class="body-bodyer">
+		<section class="userList-list">
+			<% users.forEach(function(user){ %>
+			<a href="chat.html?targetId=<%= user._id %>" class="item">
+				<img class="photo" src="image/head_photo/<%= user.userImg %>" />
+				<div class="userbox">
+					<div class="username"><%= user.nickname %></div>
+					<div class="info"><%= user.userSex=='boy'?'男':'女' %></div>
+				</div>
+				<div class="btn-default btn-del" data-id="<%= user._id %>">删除</div>
+			</a>
+			<%});%>
+		</section>
+	</bodyer>
+</body>
+</html>
+
+<script>
+	var $document=$(document);
+
+	$document.on("click",".icon-menu",function(){
+		$(".panel-menu").toggleClass("show");
+	});
+
+	$(".userList-list .item").touch({
+		onReady:function(opts){
+			$(opts.target).on("click",".btn-del",function(e){
+				e.preventDefault();
+				var $this=$(this),_id=$(this).data("id");
+				$.get("deleteById.do?_id="+_id,function(result){
+					if(result&&result.recode==1){
+						msg.ok(result.msg);
+						$this.parents(".item").remove();
+					}else{
+						msg.error(result.msg);
+					}
+				})
+			});
+		}
+		,onMove:function(opts){
+			var $btn=$(opts.target).find(".btn-del");
+			if(!$btn.hasClass("btn-del-active")&&opts.movedX<-60){
+				$btn.addClass("btn-del-active");
+			}else if($btn.hasClass("btn-del-active")&&opts.movedX>60){
+				$btn.removeClass("btn-del-active");
+			}
+		}
+	});
+</script>

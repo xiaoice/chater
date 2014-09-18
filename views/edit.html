@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'>
+	<title>用户登录</title>
+	<link rel="stylesheet" type="text/css" href="plugins/Font-Awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="css/app.css">
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/msg.js"></script>
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+<body class="body-layer login-layer">
+	<header class="body-header">
+		<a href="javascript:(history.back(-1));" class="icon-back"></a>
+		用户登录
+	</header>
+	<bodyer class="body-bodyer">
+		<div class="login-logo">
+			<img src="image/logo.png" />
+		</div>
+		<form id="form" action="">
+			<div class="form-group">
+				 <input name="username" type="text" placeholder="请输入用户名" class="login-username" id="username">
+	             <input name="password" type="password" placeholder="请输入密码" class="login-password" id="password">
+			</div>
+			<div class="btn-box">
+				<button id="bt_submit" type="submit" class="btn-default btn-success">登  录</button>
+				<a href="reg.html" class="btn-default btn-normal">注  册</a>
+			</div>
+		</form>
+	</bodyer>
+</body>
+</html>
+
+<script>
+	var $document=$(document);
+	$document.submit("#form",function(){
+		var para={
+			username:$("#username").val()
+			,password:$("#password").val()
+		}
+		if(para.username===""){
+			msg.info("用户名不能为空");
+			return false;
+		}else if(para.password===""){
+			msg.info("密码不能为空");
+			return false;
+		}else{
+	      //点击注册按钮
+	      $.post("/login.do",para,function(result){
+	          if(result.recode==1){
+	              msg.ok(result.msg,1,function(){
+	                window.location.reload();
+	              });
+	          }else{
+	              msg.error(result.msg);
+	          }
+	      });
+	      return false;
+	    }
+	})
+
+</script>

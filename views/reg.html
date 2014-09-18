@@ -1,72 +1,99 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>用户登录</title>
-        <link rel="stylesheet" type="text/css" href="/css/app.css">
-        <link rel="stylesheet" type="text/css" href="/plugins/Font-Awesome/css/font-awesome.min.css">
-        <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
-        <script type="text/javascript" src="/js/msg.js"></script>
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    </head>
-
-    <body>
-        <div class="login_wrap">
-            <div class="login_panel">
-                <div class="login_logo"></div>
-                <div class="login_logo_text">用户注册</div>
-                <div class="login_input_div">
-                    <a class="login_tip">请输入密码</a>
-                    <input type="text" class="login_input reg_username" placeholder="请输入用户名">
-                    <input type="text" class="login_input reg_nickname" placeholder="请输入昵称">
-                    <input type="password" class="login_input reg_password" placeholder="请输入密码">
-                    <input type="password" class="login_input reg_passwords" placeholder="请再次输入密码">
-                </div>
-                <input id="bt_reg" type="button" value="注  册" class="login_button login_in">
-                <a href="login.html" class="login_button login_back">返回登录</a>
-            </div>
-        </div>
-    </body>
+<!DOCTYPE HTML>
+<html ng-app="regModule">
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'>
+	<title>用户注册</title>
+	<link rel="stylesheet" type="text/css" href="plugins/Font-Awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="css/app.css">
+	<script type="text/javascript" src="/js/angular-1.3.0.js"></script>
+	<script type="text/javascript" src="js/msg.js"></script>
+</head>
+<body class="body-layer reg-layer">
+	<header class="body-header">
+		用户注册
+	</header>
+	<bodyer class="body-bodyer" ng-controller="regController">
+		<form name="regForm" class="form-box">
+			<div class="form-group">
+				 <input type="text" placeholder="请输入用户名" class="reg-username" ng-model="userinfo.username">
+			</div>
+			<div class="form-group">
+	             <input type="password" placeholder="请输入密码" class="reg-password" ng-model="userinfo.password">
+	             <input type="password" placeholder="请再次输入密码" class="reg-password-ok" ng-model="userinfo.passwords">
+			</div>
+			<div class="form-group">
+				 <input type="text" placeholder="请输入昵称" class="reg-username" ng-model="userinfo.nickname">
+			</div>
+			<div class="form-group">
+				<div class="userImgBox clearfix no-select">
+					<div ng-repeat="l in userImgs" class="userImgBorder{{l==1?' checked':''}}">
+						<input id="userImg-{{l}}" value="user_{{l}}.jpg" ng-model="userinfo.userImg" type="radio" class="radio-userImg" name="radio-userImg" >
+						<label class="label-userImg" for="userImg-{{l}}">
+							<img class="userImg" ng-src="image/head_photo/user_{{l}}.jpg" />
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label ng-repeat="sex in userSexs" class="no-select">
+				 <input value={{sex.en}} ng-model="userinfo.userSex" type="radio" class="radio" name="reg-userSex" id="radio-{{$index}}">
+				 <label class="label-radio" for="radio-{{$index}}">{{sex.cn}}</label>
+				</label>
+			</div>
+			<div class="btn-box">
+				<button ng-disabled="regForm.$invalid" ng-click="reg()" type="button" class="btn-default btn-success">注  册</button>
+				<a href="login.html" class="btn-default btn-normal">返回登录</a>
+			</div>
+		</form>
+	</bodyer>
+</body>
 </html>
 
 <script>
-    var $document=$(document);
+	angular.module('regModule',[]).controller('regController',['$scope','$http',function($scope,$http){
+		$scope.userinfo={
+			username:"",
+			password:"",
+			passwords:"",
+			nickname:"",
+			userImg:"",
+			userSex:""
+		};
+		$scope.userImgs=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+		$scope.userSexs=[{cn:"男",en:"boy"},{cn:"女",en:"girl"}];
+		$scope.reg=function(){
+			var userinfo=$scope.userinfo;
+			console.log(userinfo);
+	        if(userinfo.username===""){
+	            return msg.error("用户名不能为空");
+	        }
+	        else if(userinfo.password===""){
+	            return msg.error("密码不能为空");
+	        }
+	        else if(userinfo.password!==userinfo.passwords){
+	            return msg.error("二次密码输入不一致");
+	        }
+	        else if(userinfo.nickname===""){
+	            return msg.error("昵称不能为空");
+	        }
+	        else if(userinfo.userImg===""){
+	            return msg.error("请选择头像");
+	        }
+	        else if(userinfo.userSex===""){
+	            return msg.error("请选择性别");
+	        }
 
-
-    //点击注册
-    $document.on("click","#bt_reg",function(){
-        var para={
-            username:$(".reg_username").val()
-            ,nickname:$(".reg_nickname").val()
-            ,password:$(".reg_password").val()
-            ,passwords:$(".reg_passwords").val()
-        }
-
-        if(para.username===""){
-            return msg.error("用户名不能为空");
-        }
-        else if(para.nickname===""){
-            return msg.error("昵称不能为空");
-        }
-        else if(para.password===""){
-            return msg.error("密码不能为空");
-        }
-        else if(para.password!==para.passwords){
-            return msg.error("二次密码输入不一致");
-        }
-
-        //点击注册按钮
-        $.post("/reg.do",para,function(result){
-            if(result.recode==1){
-                msg.ok(result.msg,1,function(){
-                    window.location.href="login.html";
-                });
-            }else{
-                msg.error(result.msg);
-            }
-        });
-    })
+	        $http.post("/reg.do",userinfo).success(function(response){
+				if(response.recode===1){
+	                msg.ok(response.msg,1,function(){
+	                    window.location.href="login.html";
+	                });
+	            }else{
+	                msg.error(response.msg);
+	            }
+			})
+		}
+	}]);
 
 </script>

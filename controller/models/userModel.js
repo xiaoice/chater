@@ -9,6 +9,7 @@ var __user = {
 	,nickname:undefined
 	,gender:undefined
 	,userImg:undefined
+	,userSex:undefined
 	,createTime:undefined
 	,updateTime:undefined
 	,lastLoginTime:undefined
@@ -25,6 +26,7 @@ function User(user) {
 	this.nickname=user.nickname;
 	this.gender=user.gender;
 	this.userImg=user.userImg;
+	this.userSex=user.userSex;
 	this.createTime=user.createTime;
 	this.updateTime=user.updateTime;
 	this.lastLoginTime=user.lastLoginTime;

@@ -1,4 +1,4 @@
-/*中原证劵消息弹出框
+/*消息弹出框
 *说明，总共有4种类型[ok,info,error,wait]
 *调用方式1 参数调用
 *msg.ok("操作成功"),默认1秒后隐藏
@@ -12,10 +12,23 @@
 
 
 (function(window,undefined){
+
+	function extend(target, source) {
+	    for (var p in source) {
+	        if (source.hasOwnProperty(p)) {
+	        	if(typeof source[p] !=="undefined"){
+	            	target[p] = source[p];
+	        	}
+	        }
+	    }
+	    return target;
+	};
+
 	var msg={
 		build:function(opts){
-			var $target,html="";
-			$(".msg-box").remove();
+			var target,html="";
+			document.getElementById("msgBox")&&document.getElementById("msgBox").remove();
+			target=document.createElement("div");
 			html+='<div class="msg-box">';
 			html+='<div class="msg-box-panel">';
 			html+='<div class="msg-box-icon">';
@@ -24,22 +37,24 @@
 			html+='<span class="msg-text">'+opts.html+'</span>';
 			html+='</div>';
 			html+='</div>';
-			$target=$(html).appendTo("body");
-			return $target;
+			target.innerHTML=html;
+			target.id="msgBox";
+			document.body.appendChild(target);
+			return target;
 		}
 		,opts:{
 			html:""
 			,icon:"info"
 			,timeout:1
-			,callback:$.noop
+			,callback:function(){}
 		}
 		,show:function(html,timeout,callback){
-			var that=this,$target,opts={};
+			var that=this,target,opts={};
 			if(arguments.length===1&&typeof html==="object"){
-				opts=$.extend({},that.opts,html);
+				opts=extend({},that.opts,html);
 				opts.icon=that.icon;
 			}else{
-				opts=$.extend({},that.opts,{
+				opts=extend(that.opts,{
 					icon:that.icon
 					,html:html
 					,timeout:timeout
@@ -47,9 +62,9 @@
 				});
 			}
 
-			$target=that.build(opts);
-			that.hide.call($target,opts);
-			return $target;
+			target=that.build(opts);
+			that.hide.call(target,opts);
+			return target;
 		}
 		,hide:function(opts){
 			opts.timeout=opts.timeout||0;

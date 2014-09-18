@@ -35,6 +35,18 @@
       }
   });*/
 
+  //获取组合id
+  function getCompareId(a,b){
+    if(a.localeCompare(b)>0){
+      return a+b;
+    }else{
+      return b+a;
+    }
+  }
+
+  function putUserId(userId){
+    app.locals.onlines.push(data);
+  }
 
   io.on('connection', function (socket) {
     socket.emit('connectionok', "socket 连接成功");
@@ -63,15 +75,16 @@
 
     //进入房间
     socket.on('joinRoom', function (data) {
-      socket.join(data.receiveId);
-      console.log(data.nickname+"进入了房间，房间号："+data.receiveId);
+      var roomNo=getCompareId(data.userId,data.targetId);
+      socket.join(roomNo);
+      console.log(data.userId+"进入了房间，房间号："+roomNo);
     });
 
     //发送消息
     socket.on('sendRoomMessage', function (data) {
-      console.log(data.nickname+"发送了一条消息，房间号："+data.openId);
-      io.sockets.in(data.openId).emit('message', data);
-      io.sockets.in(data.receiveId).emit('message', data);
+      var roomNo=getCompareId(data.userId,data.targetId);
+      io.sockets.in(roomNo).emit('message', data);
+      //console.log(data.userId+"发送了一条消息，房间号："+roomNo);
       //socket.broadcast.emit(data.receiveId, data);
       //socket.broadcast.to("10000").emit('message', data);
     });

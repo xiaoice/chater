@@ -36,10 +36,8 @@ router.get('/loginOut.do', function (req, res) {
 	if(req.session.user){
 		var user=JSON.parse(JSON.stringify(req.session.user));
 		req.session.destroy(function(err) {
-			return res.json(result.ok("注销成功"));
+			return res.redirect("login.html");
 		})
-	}else{
-		return res.json(result.error("注销失败"));
 	}
 });
 
@@ -50,6 +48,8 @@ router.post('/reg.do', function (req, res) {
 		username: req.body.username
 		,password: req.body.password
 		,nickname: req.body.nickname
+		,userImg: req.body.userImg
+		,userSex: req.body.userSex
 	};
 	_userService=new userService(userModel);
 
@@ -75,13 +75,32 @@ router.post('/reg.do', function (req, res) {
 
 //获取所有用户列表
 router.get('/list.do', function (req, res) {
+	var username=req.query.username;
 	_userService=new userService();
+	var para={};
+	if(username!==""){
+		para.username=new RegExp(username);
+	}
 	//检查用户名是否已经存在
-	_userService.find({},function(err, users) {
+	_userService.find(para,function(err, users) {
 		if (err) {
 			return res.json(result.error(err));
 		}else{
 			return res.json(result.ok(users));
+		}
+	});
+});
+
+//根据用户ID删除用户信息
+router.get('/deleteById.do', function (req, res) {
+	var _id=req.query._id;
+	_userService=new userService();
+	//检查用户名是否已经存在
+	_userService.remove({_id:_id},function(err) {
+		if (err) {
+			return res.json(result.error(err));
+		}else{
+			return res.json(result.ok("删除成功！"));
 		}
 	});
 });
@@ -91,7 +110,8 @@ router.get('/login.html', function (req, res) {
 		if(req.query.type==="loginOut"){
 			res.render('login');
 		}else{
-    		res.render('list',JSON.parse(JSON.stringify(req.session.user)));
+			res.redirect('userList.html');
+    		//res.render('userList',JSON.parse(JSON.stringify(req.session.user)));
 		}
 	}else{
 		res.render('login');
@@ -107,7 +127,7 @@ router.get('/', function (req, res) {
   	if (!req.session.user) {
     	return res.redirect('/login.html');
 	}else{
-		return res.redirect('/list.html');
+		return res.redirect('/userList.html');
 	}
 });
 
@@ -121,13 +141,45 @@ router.use(function(req, res, next){
   next();
 });
 
-router.get('/list.html', function (req, res) {
-    res.render('list',JSON.parse(JSON.stringify(req.session.user)));
+router.get('/userList.html', function (req, res) {
+	_userService=new userService();
+	//检查用户名是否已经存在
+	_userService.find({'_id':{$ne:new require('mongodb').ObjectID(req.session.user._id)}},function(err, users) {
+		if (err) {
+			res.redirect(404);
+		}else{
+		    res.render('userList',{
+		    	userinfo:req.session.user
+		    	,users:users
+		    });
+		}
+	});
+
 });
 
-router.get('/chaters.html', function (req, res) {
-	console.log(JSON.parse(JSON.stringify(req.session.user)));
-    res.render('chaters',JSON.parse(JSON.stringify(req.session.user)));
+router.get('/chat.html', function (req, res) {
+	_userService=new userService();
+	  //检查用户名是否已经存在
+	  //new require('mongodb').ObjectID(req.query.targetId)
+	_userService.findOne({_id:req.query.targetId}, function(err, user) {
+	    if (user) {
+	    	res.render('chat',{
+		    	user:JSON.parse(JSON.stringify(req.session.user))
+		    	,target:{
+		    		_id:user._id
+		    		,username:user.username
+		    		,nickname:user.nickname
+		    		,userImg:user.userImg||''
+		    	}
+		    });
+	    }else{
+	    	console.log(req.query.targetId,user);
+	    }
+	});
+});
+
+router.get('/search.html', function (req, res) {
+	res.render('search');
 });
 
 module.exports = router;
